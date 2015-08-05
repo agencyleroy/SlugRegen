@@ -42,7 +42,7 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
 
     craft()->entries->saveEntry($entry);
 
-    if ($this->settings['generateCsv'] && $oldSlug != $entry->slug) {
+    if ($this->settings['generateCsv'] && trim($oldUri) != trim($entry->uri)) {
       $comparison = '"' . $oldUri . '";"' . $entry->uri . '"' . "\n";
       file_put_contents($this->settings['fileName'], $comparison, FILE_APPEND);
     }
