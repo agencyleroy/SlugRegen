@@ -7,7 +7,7 @@
 {% for locale in craft.i18n.getSiteLocales() %}
   {{ forms.checkboxField({
       label: locale.name,
-     name: 'locales[' ~ locale.id ~ ']'
+      name: 'locales[' ~ locale.id ~ ']'
     })
   }}
 {% endfor %}
@@ -16,5 +16,12 @@
     label: 'Regenerate?'|t,
     id: 'regenerateSlugs',
     name: 'regenerateSlugs',
+  })
+}}
+
+{{ forms.checkboxField({
+    label: 'Generate CSV file',
+    name: 'generateCsv',
+    checked: 'checked'
   })
 }}

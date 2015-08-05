@@ -9,6 +9,10 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
 
   private $_totalSteps = null;
 
+  private $fileName;
+
+  private $generateCsv;
+
   public function getDescription()
   {
     return Craft::t('Regenerating entry slugs');
@@ -22,6 +26,7 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
     $criteria = craft()->elements->getCriteria(ElementType::Entry);
     $criteria->limit = 1000;
     $this->entries = $criteria->find();
+    $this->fileName = craft()->config->get('environmentVariables')['basePath'] . 'slugregen_' . date('YmdHis') . '.csv';
   }
 
   public function getTotalSteps()
@@ -33,6 +38,11 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
     $settings = $this->model->getAttribute('settings');
     $this->locales = $settings['locales'];
 
+    if ($settings['generateCsv']) {
+      $this->generateCsv = true;
+      file_put_contents($this->fileName, '"old uri";"new uri"' . "\n");
+    }
+
     $this->_totalSteps = count($this->entries);
     return $this->_totalSteps;
   }
@@ -40,8 +50,10 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
   public function runStep($step)
   {
     $result = $this->runSubTask('SlugRegen_RegenerateEntrySlugs', $this->entries[$step]->title, array(
-        'entryId' => $this->entries[$step]->id,
-        'locales' => $this->locales
+        'entryId'     => $this->entries[$step]->id,
+        'locales'     => $this->locales,
+        'fileName'    => $this->fileName,
+        'generateCsv' => $this->generateCsv
       )
     );
 

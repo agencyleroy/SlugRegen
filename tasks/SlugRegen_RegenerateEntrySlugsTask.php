@@ -3,6 +3,8 @@ namespace Craft;
 
 class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
 {
+  private $settings;
+
   private $entries;
 
   private $_totalSteps = null;
@@ -13,22 +15,23 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
       return $this->_totalSteps;
     }
 
-    $settings = $this->model->getAttribute('settings');
+    $this->settings = $this->model->getAttribute('settings');
 
-    foreach ($settings['locales'] as $locale) {
-      $this->entries[] = craft()->entries->getEntryById($settings['entryId'], $locale);
+    foreach ($this->settings['locales'] as $locale) {
+      $this->entries[] = craft()->entries->getEntryById($this->settings['entryId'], $locale);
     }
 
-    $this->_totalSteps = count($settings['locales']);
+    $this->_totalSteps = count($this->settings['locales']);
     return $this->_totalSteps;
   }
 
   public function runStep($step)
   {
     $entry = $this->entries[$step];
-    $old = $entry->slug;
+    $oldSlug = $entry->slug;
+    $oldUri = $entry->uri;
 
-    switch ($old) {
+    switch ($oldSlug) {
       case '__home__':
         return true;
         break;
@@ -38,6 +41,11 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
     }
 
     craft()->entries->saveEntry($entry);
+
+    if ($this->settings['generateCsv'] && $oldSlug != $entry->slug) {
+      $comparison = '"' . $oldUri . '";"' . $entry->uri . '"' . "\n";
+      file_put_contents($this->settings['fileName'], $comparison, FILE_APPEND);
+    }
 
     unset($entry);
 
