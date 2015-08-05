@@ -32,11 +32,16 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
     $oldSlug = $entry->slug;
     $oldUri = $entry->uri;
 
-    // @TODO: this could be optimized by avoiding entries with ascii-only slugs
+    // don't bother regenerating the slug if it's already completely ascii
+    if ('ASCII' === mb_detect_encoding($oldUri, 'ASCII', true)) {
+      unset($entry);
+      return true;
+    }
 
     switch ($oldSlug) {
       case '__home__': // avoid regenerating the home page slug, this will break it
       // room for more exclusions as well
+        unset($entry);
         return true;
         break;
       default:
