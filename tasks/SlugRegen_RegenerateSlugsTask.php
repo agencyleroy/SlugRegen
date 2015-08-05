@@ -3,15 +3,11 @@ namespace Craft;
 
 class SlugRegen_RegenerateSlugsTask extends BaseTask
 {
+  private $settings;
+
   private $entries;
 
-  private $locales;
-
   private $_totalSteps = null;
-
-  private $fileName;
-
-  private $generateCsv;
 
   public function getDescription()
   {
@@ -26,7 +22,6 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
     $criteria = craft()->elements->getCriteria(ElementType::Entry);
     $criteria->limit = 1000;
     $this->entries = $criteria->find();
-    $this->fileName = craft()->config->get('environmentVariables')['basePath'] . 'slugregen_' . date('YmdHis') . '.csv';
   }
 
   public function getTotalSteps()
@@ -35,12 +30,11 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
       return $this->_totalSteps;
     }
 
-    $settings = $this->model->getAttribute('settings');
-    $this->locales = $settings['locales'];
+    $this->settings = $this->model->getAttribute('settings');
 
-    if ($settings['generateCsv']) {
-      $this->generateCsv = true;
-      file_put_contents($this->fileName, '"old uri";"new uri"' . "\n");
+    if ($this->settings['generateCsv']) {
+      $this->settings['fileName'] = craft()->config->get('environmentVariables')['basePath'] . 'slugregen_' . date('YmdHis') . '.csv';
+      file_put_contents($this->settings['fileName'], '"old uri";"new uri"' . "\n");
     }
 
     $this->_totalSteps = count($this->entries);
@@ -51,9 +45,9 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
   {
     $result = $this->runSubTask('SlugRegen_RegenerateEntrySlugs', $this->entries[$step]->title, array(
         'entryId'     => $this->entries[$step]->id,
-        'locales'     => $this->locales,
-        'fileName'    => $this->fileName,
-        'generateCsv' => $this->generateCsv
+        'locales'     => $this->settings['locales'],
+        'fileName'    => $this->settings['fileName'],
+        'generateCsv' => $this->settings['generateCsv']
       )
     );
 
