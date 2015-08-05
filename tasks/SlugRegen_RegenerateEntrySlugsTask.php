@@ -7,11 +7,6 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
 
   private $_totalSteps = null;
 
-  public function getDescription()
-  {
-    return Craft::t('Regenerating entry slugs');
-  }
-
   public function getTotalSteps()
   {
     if (is_int($this->_totalSteps)) {
