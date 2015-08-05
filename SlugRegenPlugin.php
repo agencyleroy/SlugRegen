@@ -29,8 +29,16 @@ class SlugRegenPlugin extends BasePlugin
 
   public function prepSettings($settings)
   {
-    if($settings["regenerateSlugs"]) {
-      craft()->slugRegen_slugRegeneration->regenerateSlugs();
+    if($settings['regenerateSlugs']) {
+      $locales = array();
+
+      foreach ($settings['locales'] as $locale => $enabled) {
+        if ($enabled) {
+          $locales = array_merge($locales, array($locale));
+        }
+      }
+
+      craft()->slugRegen_slugRegeneration->regenerateSlugs($locales);
     }
   }
 }

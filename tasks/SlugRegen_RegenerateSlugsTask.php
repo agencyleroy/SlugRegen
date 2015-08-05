@@ -17,12 +17,11 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
   public function init()
   {
     parent::init();
-    ini_set('memory_limit', '2048M');
+    ini_set('memory_limit', '768M');
 
     $criteria = craft()->elements->getCriteria(ElementType::Entry);
     $criteria->limit = 1000;
     $this->entries = $criteria->find();
-    $this->locales = craft()->i18n->getSiteLocaleIds();
   }
 
   public function getTotalSteps()
@@ -30,6 +29,9 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
     if (is_int($this->_totalSteps)) {
       return $this->_totalSteps;
     }
+
+    $settings = $this->model->getAttribute('settings');
+    $this->locales = $settings['locales'];
 
     $this->_totalSteps = count($this->entries);
     return $this->_totalSteps;

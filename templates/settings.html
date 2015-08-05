@@ -2,8 +2,19 @@
 
 <h4>Regenerate slugs</h4>
 
+<h5>Locales to regenerate slugs for</h5>
+
+{% for locale in craft.i18n.getSiteLocales() %}
+  {{ forms.checkboxField({
+      label: locale.name,
+     name: 'locales[' ~ locale.id ~ ']'
+    })
+  }}
+{% endfor %}
+
 {{ forms.lightswitchField({
-	label: 'Regenerate?'|t,
-	id: 'regenerateSlugs',
-	name: 'regenerateSlugs',
-}) }}
+    label: 'Regenerate?'|t,
+    id: 'regenerateSlugs',
+    name: 'regenerateSlugs',
+  })
+}}
