@@ -18,17 +18,18 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
       return $this->_totalSteps;
     }
 
-    $entry = $this->getSettings();
-    $this->entries[] = craft()->entries->getEntryById($entry->id, 'sv_ax');
-    $this->entries[] = craft()->entries->getEntryById($entry->id, 'sv_fi');
-    $this->entries[] = craft()->entries->getEntryById($entry->id, 'sv_se');
-    $this->entries[] = craft()->entries->getEntryById($entry->id, 'fi_fi');
-    $this->entries[] = craft()->entries->getEntryById($entry->id, 'en_gb');
-    $this->_totalSteps = 5; // five languages @TODO make this dynamic
+    $settings = $this->model->getAttribute('settings');
+
+    foreach ($settings['locales'] as $locale) {
+      $this->entries[] = craft()->entries->getEntryById($settings['entryId'], $locale);
+    }
+
+    $this->_totalSteps = count($settings['locales']);
     return $this->_totalSteps;
   }
 
-  public function runStep($step) {
+  public function runStep($step)
+  {
     $entry = $this->entries[$step];
     $old = $entry->slug;
 
@@ -42,6 +43,8 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
     }
 
     craft()->entries->saveEntry($entry);
+
+    unset($entry);
 
     if ($this->_totalSteps - 1 == $step) {
       unset($this->entries);
