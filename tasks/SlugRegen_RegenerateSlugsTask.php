@@ -37,7 +37,7 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
     if ($this->settings['generateCsv']) {
       // the file gets put into the basePath, which is the root directory of your Craft project
       $this->settings['fileName'] = craft()->config->get('environmentVariables')['basePath'] . 'slugregen_' . date('YmdHis') . '.csv';
-      file_put_contents($this->settings['fileName'], '"old uri";"new uri"' . "\n");
+      file_put_contents($this->settings['fileName'], '"locale";"old uri";"new uri"' . "\n");
     }
 
     $this->_totalSteps = count($this->entries);

@@ -50,7 +50,7 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
 
     // sometimes uris are almost empty for some reason, hence trim()
     if ($this->settings['generateCsv'] && trim($oldUri) != trim($entry->uri)) {
-      $comparison = '"' . $oldUri . '";"' . $entry->uri . '"' . "\n";
+      $comparison = '"' . $entry->locale . '";"' . $oldUri . '";"' . $entry->uri . '"' . "\n";
       file_put_contents($this->settings['fileName'], $comparison, FILE_APPEND);
     }
 
