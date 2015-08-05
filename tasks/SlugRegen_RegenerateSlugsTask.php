@@ -19,6 +19,7 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
     parent::init();
     ini_set('memory_limit', '768M');
 
+    // there is probably a much faster way to do this, using a manual query. all we really need is ids and titles.
     $criteria = craft()->elements->getCriteria(ElementType::Entry);
     $criteria->limit = 1000;
     $this->entries = $criteria->find();
@@ -30,9 +31,11 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
       return $this->_totalSteps;
     }
 
+    // the correct place to do this would be init(), but settings aren't available yet then.
     $this->settings = $this->model->getAttribute('settings');
 
     if ($this->settings['generateCsv']) {
+      // the file gets put into the basePath, which is the root directory of your Craft project
       $this->settings['fileName'] = craft()->config->get('environmentVariables')['basePath'] . 'slugregen_' . date('YmdHis') . '.csv';
       file_put_contents($this->settings['fileName'], '"old uri";"new uri"' . "\n");
     }
@@ -51,8 +54,10 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
       )
     );
 
+    // the amount of memory that these calls to unset() free is... minimal
     unset($this->entries[$step]);
 
+    // last step
     if ($this->_totalSteps - 1 == $step) {
       unset($this->entries);
     }
