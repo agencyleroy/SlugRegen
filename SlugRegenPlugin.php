@@ -9,7 +9,7 @@ class SlugRegenPlugin extends BasePlugin
 
   public function getVersion()
   {
-    return '0.5.0';
+    return '1.0.0';
   }
 
   public function getDeveloper()
