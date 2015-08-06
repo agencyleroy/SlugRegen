@@ -12,16 +12,26 @@
   }}
 {% endfor %}
 
-{{ forms.lightswitchField({
-    label: 'Regenerate?'|t,
-    id: 'regenerateSlugs',
-    name: 'regenerateSlugs',
-  })
-}}
+<h5>Generate a CSV file containing the locale, old, and new URIs in the root of the Craft project</h5>
 
 {{ forms.checkboxField({
     label: 'Generate CSV file',
     name: 'generateCsv',
     checked: 'checked'
+  })
+}}
+
+<h5>If your goal is to remove non-ASCII characters from your slugs, check this box to save time and memory</h5>
+
+{{ forms.checkboxField({
+    label: 'Don\'t regenerate if the slug is already completely ASCII',
+    name: 'skipAscii'
+  })
+}}
+
+{{ forms.lightswitchField({
+    label: 'Regenerate?'|t,
+    id: 'regenerateSlugs',
+    name: 'regenerateSlugs',
   })
 }}

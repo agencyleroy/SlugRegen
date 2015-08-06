@@ -50,7 +50,8 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
         'entryId'     => $this->entries[$step]->id,
         'locales'     => $this->settings['locales'],
         'fileName'    => $this->settings['fileName'],
-        'generateCsv' => $this->settings['generateCsv']
+        'generateCsv' => $this->settings['generateCsv'],
+        'skipAscii'   => $this->settings['skipAscii']
       )
     );
 

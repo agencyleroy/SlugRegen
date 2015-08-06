@@ -33,7 +33,7 @@ class SlugRegen_RegenerateEntrySlugsTask extends BaseTask
     $oldUri = $entry->uri;
 
     // don't bother regenerating the slug if it's already completely ascii
-    if ('ASCII' === mb_detect_encoding($oldUri, 'ASCII', true)) {
+    if ($this->settings['skipAscii'] && 'ASCII' === mb_detect_encoding($oldUri, 'ASCII', true)) {
       unset($entry);
       return true;
     }

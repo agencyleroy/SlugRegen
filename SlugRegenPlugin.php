@@ -39,8 +39,9 @@ class SlugRegenPlugin extends BasePlugin
       }
 
       craft()->slugRegen_slugRegeneration->regenerateSlugs(array(
-          'locales' => $locales,
-          'generateCsv' => $settings['generateCsv']
+          'locales'     => $locales,
+          'generateCsv' => $settings['generateCsv'],
+          'skipAscii'   => $settings['skipAscii']
         )
       );
     }
