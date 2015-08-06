@@ -46,12 +46,11 @@ class SlugRegen_RegenerateSlugsTask extends BaseTask
 
   public function runStep($step)
   {
-    $result = $this->runSubTask('SlugRegen_RegenerateEntrySlugs', $this->entries[$step]->title, array(
-        'entryId'     => $this->entries[$step]->id,
-        'locales'     => $this->settings['locales'],
-        'fileName'    => $this->settings['fileName'],
-        'generateCsv' => $this->settings['generateCsv'],
-        'skipAscii'   => $this->settings['skipAscii']
+    $result = $this->runSubTask('SlugRegen_RegenerateEntrySlugs', $this->entries[$step]->title,
+      array_merge($this->settings,
+        array(
+          'entryId' => $this->entries[$step]->id
+        )
       )
     );
 

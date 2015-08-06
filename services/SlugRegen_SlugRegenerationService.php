@@ -9,12 +9,7 @@ class SlugRegen_SlugRegenerationService extends BaseApplicationComponent
     if ($task) {
       craft()->tasks->saveTask($task, false);
     } else {
-      craft()->tasks->createTask('SlugRegen_RegenerateSlugs', null, array(
-          'locales'     => $settings['locales'],
-          'generateCsv' => $settings['generateCsv'],
-          'skipAscii'   => $settings['skipAscii']
-        )
-      );
+      craft()->tasks->createTask('SlugRegen_RegenerateSlugs', null, $settings);
     }
   }
 }
